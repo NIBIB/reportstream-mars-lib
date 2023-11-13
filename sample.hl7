@@ -1,0 +1,10 @@
+MSH|^~\&|NAMESPACE.STAG^2.16.840.1.113883.3.8589.4.2.82.3^ISO|NAME^00Z0000000^CLIA|AIMS.INTEGRATION.STG^2.16.840.1.114222.4.3.15.2^ISO|AIMS.PLATFORM^2.16.840.1.114222.4.1.217446^ISO|20211217102647-0600||ORU^R01^ORU_R01|20211217162647Z_hU9H7ZQOr3vGYnk9K9qHCQ|T|2.5.1|||NE|NE|||||PHLabReport-NoAck^ELR251R1_Rcvr_Prof^2.16.840.1.113883.9.11^ISO
+SFT|Vendor|Version|Name|Binary ID Unknown
+PID|1||69QHAx9X8y9bXqFKAL9ZCA^^^&2.16.840.1.113883.3.8589.4.2.82.3&ISO^PI||Florida^OTC^^||19990101|F||1002-5^American Indian or Alaska Native^HL70005^^^^2.5.1|2855 S Orange Ave^^Orlando^FL^32806^^^^12095||^^PH^^^858^2160800|||||||||N^Not Hispanic or Latino^HL70189^^^^2.5.1
+ORC|RE||hU9H7ZQOr3vGYnk9K9qHCQ^^2.16.840.1.113883.3.8589.4.2.82.3^ISO|||||||||^^SA.OTCSelfReport|||||||||SA.OTCSelfReport|2855 S Orange Ave^^Orlando^FL^32806|^^^^^858^2160800
+OBR|1||hU9H7ZQOr3vGYnk9K9qHCQ^^2.16.840.1.113883.3.8589.4.2.82.3^ISO|97097-0^SARS-CoV-2 (COVID-19) Ag [Presence] in Upper respiratory specimen by Rapid immunoassay^LN^^^^2.71|||20211217102323-0600|||||||||^^SA.OTCSelfReport||||||20211217102324-0600|||F
+OBX|1|CWE|97097-0^SARS-CoV-2 (COVID-19) Ag [Presence] in Upper respiratory specimen by Rapid immunoassay^LN^^^^2.71||260373001^Detected^SCT^^^^20210301||||||F||||00Z0000042||CareStart COVID-19 Antigen Home Test_Access Bio, Inc._EUA^^99ELR^^^^Vunknown||20211217102324-0600||||SA.OTCSelfReport^^^^^&2.16.840.1.113883.3.8589.4.1.152&ISO^XX^^^00Z0000042|14 Fake AtHome Test Street^^Fake City^GU
+NTE|1|L|CareStart COVID-19 Antigen Home Test_Access Bio, Inc._EUA
+OBX|2|NM|35659-2^Age at specimen collection^LN^^^^2.71||18|a^year^UCUM^^^^2.1|||||F||||00Z0000042||||||||SA.OTCSelfReport^^^^^&2.16.840.1.113883.3.8589.4.1.152&ISO^XX^^^00Z0000042|14 Fake AtHome Test Street^^Fake City^GU|||||QST
+SPM|1|^hU9H7ZQOr3vGYnk9K9qHCQ&&2.16.840.1.113883.3.8589.4.2.82.3&ISO||697989009^Anterior nares swab^SCT^^^^20210301|||||||||||||20211217102323-0600|20211217102323-0600
+
