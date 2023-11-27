@@ -2,10 +2,19 @@
 
 import * as jwt from 'jsonwebtoken'
 import * as uuid from 'uuid'
-
 import fs from 'fs'
 import axios from 'axios'
 
+/**
+ * Generates a JSON Web Token (JWT) for client authentication.
+ *
+ * @param key - The private key used for signing the JWT.
+ * @param clientId - The client identifier.
+ * @param kid - Key Identifier used in JWT.
+ * @param algorithm - The signing algorithm, either RS256 or ES384.
+ * @param typ - Token type, default is 'JWT'.
+ * @returns The signed JWT.
+ */
 function generateJWT (
   key: string,
   clientId: string,
@@ -19,15 +28,16 @@ function generateJWT (
     sub: kid,
     aud: 'staging.prime.cdc.gov',
     exp: now + 300, // Expire in 5 minutes
-    jti: uuid.v4()
+    jti: uuid.v4() // Unique identifier for the JWT
   }
 
   const headerData = {
     kid,
     typ,
-    alg: algorithm
+    alg: algorithm // Algorithm used for signing the JWT
   }
 
+  // Signs and returns the JWT.
   const token = jwt.sign(
     payloadData,
     key,
@@ -37,6 +47,12 @@ function generateJWT (
   return token
 }
 
+/**
+ * Exchanges a JWT for a Bearer Token.
+ *
+ * @param jwt - The JWT to exchange.
+ * @returns A promise that resolves to the bearer token.
+ */
 async function exchangeJWTForBearerToken (jwt: string): Promise<string> {
   const params = new URLSearchParams()
   params.append('scope', 'meadowsdesign.*.report')
@@ -51,13 +67,21 @@ async function exchangeJWTForBearerToken (jwt: string): Promise<string> {
       }
     })
 
-    return response.data.access_token // Assuming the token is in the access_token field
+    // Returns the access token from the response.
+    return response.data.access_token
   } catch (error) {
     console.error('Error exchanging JWT for bearer token:', error)
     throw error
   }
 }
 
+/**
+ * Submits HL7 data to a specified endpoint using a bearer token for authentication.
+ *
+ * @param bearerToken - The bearer token for authentication.
+ * @param hl7FilePath - The file path of the HL7 data.
+ * @returns A promise that resolves when the data is successfully submitted.
+ */
 async function submitData (bearerToken: string, hl7FilePath: string): Promise<void> {
   const hl7Data = fs.readFileSync(hl7FilePath, 'utf8')
 
@@ -65,7 +89,7 @@ async function submitData (bearerToken: string, hl7FilePath: string): Promise<vo
     await axios.post('https://staging.prime.cdc.gov/api/waters', hl7Data, {
       headers: {
         authorization: `Bearer ${bearerToken}`,
-        client: 'meadowsdesign', // Client ID
+        client: 'meadowsdesign', // Client identifier
         'content-type': 'application/hl7-v2'
       }
     })
