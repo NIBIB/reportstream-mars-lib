@@ -1,9 +1,8 @@
 // generate-jwt.ts
 
-import * as jwt from 'jsonwebtoken'
-import * as uuid from 'uuid'
 import axios from 'axios'
-
+import { nanoid } from 'nanoid'
+import { KJUR } from 'jsrsasign'
 /**
  * Generates a JSON Web Token (JWT) for client authentication.
  *
@@ -23,15 +22,16 @@ function generateJWT (
   clientId: string,
   kid: string,
   algorithm: 'RS256' | 'ES384',
-  typ = 'JWT'
+  typ = 'JWT',
+  aud = 'staging.prime.cdc.gov'
 ): string {
   const now = Math.floor(Date.now() / 1000)
   const payloadData = {
-    iss: kid,
+    iss: clientId,
     sub: kid,
-    aud: 'staging.prime.cdc.gov',
+    aud,
     exp: now + 300, // Expire in 5 minutes
-    jti: uuid.v4() // Unique identifier for the JWT
+    jti: nanoid() // Unique identifier for the JWT
   }
 
   const headerData = {
@@ -41,10 +41,11 @@ function generateJWT (
   }
 
   // Signs and returns the JWT.
-  const token = jwt.sign(
+  const token = KJUR.jws.JWS.sign(
+    headerData.alg,
+    headerData,
     payloadData,
-    key,
-    { algorithm, header: headerData }
+    key
   )
 
   return token
@@ -56,7 +57,7 @@ function generateJWT (
  * @param jwt - The JWT to exchange.
  * @returns A promise that resolves to the bearer token.
  */
-async function exchangeJWTForBearerToken (jwt: string): Promise<string> {
+async function exchangeJWTForBearerToken (scope: string, jwt: string): Promise<string> {
   const params = new URLSearchParams()
   params.append('scope', 'meadowsdesign.*.report')
   params.append('grant_type', 'client_credentials')

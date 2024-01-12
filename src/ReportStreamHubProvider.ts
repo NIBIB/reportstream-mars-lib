@@ -61,24 +61,25 @@ export default class ReportStreamHubProvider implements MarsHubProvider {
   async submitTest (hl7Message: string): Promise<boolean> {
     // TODO: Build a result that can be used across providers with some sort
     // of "check-point"
-    let endpoint: string = 'https://staging.prime.cdc.gov/api/waters'
+    let aud: string = 'staging.prime.cdc.gov'
 
     if (this.isUsingProduction) {
       // TODO: Confirm production endpoint
-      endpoint = 'https://staging.prime.cdc.gov/api/waters'
+      aud = 'prime.cdc.gov'
     }
 
     const myJwt = generateJWT(
       this._reportStreamConfig.privatePemString,
       this._reportStreamConfig.clientId,
       this._reportStreamConfig.kid,
-      this._reportStreamConfig.algorithm
+      this._reportStreamConfig.algorithm,
+      aud
     )
 
-    const bearerToken = await exchangeJWTForBearerToken(myJwt)
+    const bearerToken = await exchangeJWTForBearerToken(this._reportStreamConfig.scope, myJwt)
 
     try {
-      await axios.post(endpoint, hl7Message, {
+      await axios.post(`https://${aud}/api/waters`, hl7Message, {
         headers: {
           authorization: `Bearer ${bearerToken}`,
           client: this._reportStreamConfig.clientId, // Client identifier
