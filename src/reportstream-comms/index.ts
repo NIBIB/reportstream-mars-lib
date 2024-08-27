@@ -59,7 +59,7 @@ function generateJWT (
  */
 async function exchangeJWTForBearerToken (scope: string, jwt: string): Promise<string> {
   const params = new URLSearchParams()
-  params.append('scope', 'meadowsdesign.*.report')
+  params.append('scope', scope)
   params.append('grant_type', 'client_credentials')
   params.append('client_assertion_type', 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer')
   params.append('client_assertion', jwt)
