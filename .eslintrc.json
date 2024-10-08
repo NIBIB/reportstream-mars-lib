@@ -3,6 +3,9 @@
     "es2021": true,
     "node": true
   },
+  "ignorePatterns": [
+    "/dist/**"
+  ],
   "extends": "standard-with-typescript",
   "parserOptions": {
     "ecmaVersion": "latest",

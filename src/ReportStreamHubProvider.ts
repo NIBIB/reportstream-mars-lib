@@ -59,25 +59,34 @@ export default class ReportStreamHubProvider implements MarsHubProvider {
    * @returns a boolean value indicating successful delivery.
    */
   async submitTest (hl7Message: string): Promise<boolean> {
-    // TODO: Build a result that can be used across providers with some sort
-    // of "check-point"
     let aud: string = 'staging.prime.cdc.gov'
 
     if (this.isUsingProduction) {
-      // TODO: Confirm production endpoint
       aud = 'prime.cdc.gov'
     }
 
-    const myJwt = generateJWT(
-      this._reportStreamConfig.privatePemString,
-      this._reportStreamConfig.clientId,
-      this._reportStreamConfig.kid,
-      this._reportStreamConfig.algorithm,
-      aud
-    )
+    let myJwt: string
 
-    const bearerToken = await exchangeJWTForBearerToken(this._reportStreamConfig.scope, myJwt)
+    try {
+      myJwt = generateJWT(
+        this._reportStreamConfig.privatePemString,
+        this._reportStreamConfig.clientId,
+        this._reportStreamConfig.kid,
+        this._reportStreamConfig.algorithm,
+        aud
+      )
+    } catch (error) {
+      // Yes, I know this is terrible and we catch just to log and then rethrow.
+      // That said, if something happens and the user doesn't know exactly why
+      // something bad is happening -- like an ill formatted PEM, they'll just
+      // see a submission error. We're trying to provide a little more detail in
+      // the dump for the user here other than something like jsrsasign's
+      // 'init failed:Error: not supported argument.'
+      console.error('Error generating JWT token.  Is your PEM correct?', error)
+      throw error
+    }
 
+    const bearerToken = await exchangeJWTForBearerToken(aud, this._reportStreamConfig.scope, myJwt)
     try {
       await axios.post(`https://${aud}/api/waters`, hl7Message, {
         headers: {
@@ -86,7 +95,7 @@ export default class ReportStreamHubProvider implements MarsHubProvider {
           'content-type': 'application/hl7-v2'
         }
       })
-      console.log('Data submitted successfully')
+
       return true
     } catch (error) {
       console.error('Error submitting data:', error)

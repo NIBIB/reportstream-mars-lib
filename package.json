@@ -1,21 +1,39 @@
 {
   "name": "reportstream-mars-lib",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MARS Library for submitting lab results to ReportStream",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "start": "node dist/index.js",
     "build": "tsc",
     "test": "jest",
     "prepublishOnly": "npm run build",
     "lint": "eslint . --ext .ts"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NIBIB/reportstream-mars-lib"
+  },
+  "bugs": {
+    "url": "https://github.com/NIBIB/reportstream-mars-lib/issues"
+  },
+  "keywords": [
+    "RADx",
+    "MARS Hub",
+    "CDC",
+    "ReportStream"
+  ],
+  "author": {
+    "name": "Andy Meadows",
+    "organization": "Meadows Design, LLC",
+    "url": "https://meadowsdesign.com"
+  },
+  "license": "MIT",
   "dependencies": {
-    "axios": "^0.21.1",
-    "jsrsasign": "^10.9.0",
+    "axios": "^1.7.7",
+    "jsrsasign": "^11.1.0",
     "nanoid": "3.3.7",
-    "radx-mars-lib": "git+https://github.com/NIBIB/radx-mars-lib.git#main"
+    "radx-mars-lib": "^1.0.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.2",

@@ -6,15 +6,15 @@ import { KJUR } from 'jsrsasign'
 /**
  * Generates a JSON Web Token (JWT) for client authentication.
  *
- * @param key - The private key in PEM format used for signing the JWT.
- * @param clientId - The client identifier.  Can be sent as the ISS.
- * @param kid - Key Identifier used in JWT.  The kid is set when ReportStream
+ * @param key The private key in PEM format used for signing the JWT.
+ * @param clientId The client identifier.  Can be sent as the ISS.
+ * @param kid Key Identifier used in JWT.  The kid is set when ReportStream
  * loads the credential and follows the format of orgname.unique-value (org name
  * here is synonymous with client-id). By convention if there is only one key,
  * ReportStram uses orgname.default, but theoretically this could be
  * orgname.<any-value>, so we need the kid.
- * @param algorithm - The signing algorithm, either RS256 or ES384.
- * @param typ - Token type, default is 'JWT'.
+ * @param algorithm The signing algorithm, either RS256 or ES384.
+ * @param aud The audience that should receive the token.
  * @returns The signed JWT.
  */
 function generateJWT (
@@ -22,7 +22,6 @@ function generateJWT (
   clientId: string,
   kid: string,
   algorithm: 'RS256' | 'ES384',
-  typ = 'JWT',
   aud = 'staging.prime.cdc.gov'
 ): string {
   const now = Math.floor(Date.now() / 1000)
@@ -36,10 +35,11 @@ function generateJWT (
 
   const headerData = {
     kid,
-    typ,
+    typ: 'JWT',
     alg: algorithm // Algorithm used for signing the JWT
   }
 
+  // const keyObj = KEYUTIL.getKey(key)
   // Signs and returns the JWT.
   const token = KJUR.jws.JWS.sign(
     headerData.alg,
@@ -54,10 +54,12 @@ function generateJWT (
 /**
  * Exchanges a JWT for a Bearer Token.
  *
+ * @param aud - The audience for the token
+ * @param scope - The scope of the token
  * @param jwt - The JWT to exchange.
  * @returns A promise that resolves to the bearer token.
  */
-async function exchangeJWTForBearerToken (scope: string, jwt: string): Promise<string> {
+async function exchangeJWTForBearerToken (aud: string, scope: string, jwt: string): Promise<string> {
   const params = new URLSearchParams()
   params.append('scope', scope)
   params.append('grant_type', 'client_credentials')
@@ -65,7 +67,7 @@ async function exchangeJWTForBearerToken (scope: string, jwt: string): Promise<s
   params.append('client_assertion', jwt)
 
   try {
-    const response = await axios.post('https://staging.prime.cdc.gov/api/token', params, {
+    const response = await axios.post(`https://${aud}/api/token`, params, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
