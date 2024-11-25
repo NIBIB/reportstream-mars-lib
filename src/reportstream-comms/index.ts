@@ -57,6 +57,7 @@ function generateJWT (
  * @param aud - The audience for the token
  * @param scope - The scope of the token
  * @param jwt - The JWT to exchange.
+ * @throws Will throw an AxiosError exception if something goes horribly wrong.
  * @returns A promise that resolves to the bearer token.
  */
 async function exchangeJWTForBearerToken (aud: string, scope: string, jwt: string): Promise<string> {
@@ -66,23 +67,14 @@ async function exchangeJWTForBearerToken (aud: string, scope: string, jwt: strin
   params.append('client_assertion_type', 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer')
   params.append('client_assertion', jwt)
 
-  try {
-    const response = await axios.post(`https://${aud}/api/token`, params, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      }
-    })
+  const response = await axios.post(`https://${aud}/api/token`, params, {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
 
-    // Returns the access token from the response.
-    return response.data.access_token
-  } catch (error) {
-    console.error('Error exchanging JWT for bearer token:', error)
-    throw error
-  }
+  // Returns the access token from the response.
+  return response.data.access_token
 }
-
-// // QUESTIONS
-// // scope: is it always $clientId.*.report?
-// //
 
 export { generateJWT, exchangeJWTForBearerToken }
