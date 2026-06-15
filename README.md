@@ -1,5 +1,9 @@
 # Report Stream MARS Hub Library.
 
+- *This repository has been archived and is no longer maintained.*
+- *The code is provided for historical reference and may contain unpatched or unknown vulnerabilities.*
+- *It should not be used in production systems.*
+
 ## Overview
 This TypeScript library communicates with the RADx MARS ReportStream Hub.  It
 depends on the base RADx MARS Library `radx-mars-lib` available on the [NIBIB
